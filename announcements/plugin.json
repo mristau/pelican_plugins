@@ -1,0 +1,20 @@
+{
+    "meta": {
+        "status": "enabled",
+        "status_message": null,
+        "load_order": 0
+    },
+    "id": "announcements",
+    "name": "Announcements",
+    "author": "Boy132",
+    "version": "1.0.0",
+    "description": "Create panel wide announcements to inform your users about stuff",
+    "category": "plugin",
+    "url": "https://github.com/Boy132/announcements",
+    "update_url": null,
+    "namespace": "Boy132\\Announcements",
+    "class": "AnnouncementsPlugin",
+    "panels": null,
+    "panel_version": null,
+    "composer_packages": null
+}

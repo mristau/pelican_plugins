@@ -4,6 +4,7 @@ These plugins are meant as a demo and proof-of-concept. They do not aim to be co
 
 | Name                   | Description                                                                                                           | Useable? |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------- | -------- |
+| Announcements          | Very simple announcements via AlertBanners.                                                                           | Yes      |
 | Billing                | Allows admins to create products and users to buy them. Features automatic server creation and also payment handling. | No       |
 | Fluffy Theme           | Simple "Theme" with silly colors and font.                                                                            | Yes      |
 | Pirate Language        | Adds a new Pirate like language to the panel. (only Admin Dashboard, Profile & Health page)                           | Yes      |
