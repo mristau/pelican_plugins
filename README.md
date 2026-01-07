@@ -31,6 +31,8 @@ A curated list of plugins for the [Pelican Panel](https://pelican.dev). Feel fre
 ## Themes
 
 - [Fluffy Theme](/fluffy-theme) - A super nice and super fluffy theme
+- [Neobrutalism Theme](/neobrutalism-theme) - Transform your panel with thick borders, pronounced shadows, and geometric aesthetics inspired by the neobrutalism design movement
+- [Nord Theme](/nord-theme) - A light and dark arctic Nord theme
 - [Pterodactyl Theme](/pterodactyl-theme) - Pterodactyl like colors and font
 
 ## Language Packs
