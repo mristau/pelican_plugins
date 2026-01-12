@@ -36,6 +36,7 @@ class CloudflareDomain extends Model
     /** @throws Exception */
     public function fetchCloudflareId(): void
     {
+        // @phpstan-ignore staticMethod.notFound
         $response = Http::cloudflare()->get('zones', [
             'name' => $this->name,
         ])->json();
