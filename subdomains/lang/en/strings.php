@@ -16,10 +16,15 @@ return [
     'record_type' => 'Record type',
     'is_synced' => 'Is Synced?',
     'srv_target' => 'SRV target',
+    'no_srv_target' => 'No SRV target',
 
     'sync' => 'Sync',
-    'set_srv_target' => 'Set SRV target',
 
     'api_token' => 'Cloudflare API Token',
     'api_token_help' => 'The token needs to have read permissions for Zone.Zone and write for Zone.Dns. For better security you can also set the "Zone Resources" to exclude certain domains and add the panel ip to the "Client IP Adress Filtering".',
+
+    'notifications' => [
+        'synced' => 'Domain synced with cloudflare',
+        'not_synced' => 'Could not sync domain with cloudflare',
+    ],
 ];

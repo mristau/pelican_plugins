@@ -46,7 +46,7 @@ class SubdomainRelationManager extends RelationManager
                             return $service->handle($data, $subdomain);
                         } catch (Exception $exception) {
                             Notification::make()
-                                ->title(trans('subdomains::notifications.not_synced'))
+                                ->title(trans('subdomains::strings.not_synced'))
                                 ->body($exception->getMessage())
                                 ->danger()
                                 ->persistent()
@@ -89,7 +89,7 @@ class SubdomainRelationManager extends RelationManager
                             return $service->handle($data);
                         } catch (Exception $exception) {
                             Notification::make()
-                                ->title(trans('subdomains::notifications.not_synced'))
+                                ->title(trans('subdomains::strings.not_synced'))
                                 ->body($exception->getMessage())
                                 ->danger()
                                 ->persistent()

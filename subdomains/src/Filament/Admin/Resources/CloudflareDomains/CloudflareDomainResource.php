@@ -41,7 +41,7 @@ class CloudflareDomainResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return trans('admin/dashboard.advanced');
+        return trans_choice('subdomains::strings.subdomain', 2);
     }
 
     public static function getNavigationBadge(): ?string
@@ -76,12 +76,12 @@ class CloudflareDomainResource extends Resource
                             $domain->fetchCloudflareId();
 
                             Notification::make()
-                                ->title(trans('subdomains::notifications.synced'))
+                                ->title(trans('subdomains::strings.synced'))
                                 ->success()
                                 ->send();
                         } catch (Exception $exception) {
                             Notification::make()
-                                ->title(trans('subdomains::notifications.not_synced'))
+                                ->title(trans('subdomains::strings.not_synced'))
                                 ->body($exception->getMessage())
                                 ->danger()
                                 ->persistent()

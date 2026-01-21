@@ -18,14 +18,15 @@ class ManageCloudflareDomains extends ManageRecords
         return [
             CreateAction::make()
                 ->createAnother(false)
+                ->hidden(fn () => is_null(config('subdomains.token')))
                 ->using(function (array $data) {
                     try {
                         return CloudflareDomain::create($data);
                     } catch (Exception $exception) {
                         Notification::make()
-                            ->title(trans('subdomains::notifications.not_synced'))
+                            ->title(trans('subdomains::strings.not_synced'))
                             ->body($exception->getMessage())
-                            ->danger()
+                            ->warning()
                             ->persistent()
                             ->send();
                     }
