@@ -5,7 +5,7 @@ namespace Boy132\Subdomains\Providers;
 use App\Filament\Admin\Resources\Servers\ServerResource;
 use App\Models\Role;
 use App\Models\Server;
-use Boy132\Subdomains\Filament\Admin\Resources\Users\RelationManagers\SubdomainRelationManager;
+use Boy132\Subdomains\Filament\Admin\Resources\Servers\RelationManagers\SubdomainRelationManager;
 use Boy132\Subdomains\Models\Subdomain;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
