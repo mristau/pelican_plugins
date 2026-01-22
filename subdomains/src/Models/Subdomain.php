@@ -62,6 +62,7 @@ class Subdomain extends Model implements HasLabel
             throw new Exception('Server has no allocation');
         }
 
+        // @phpstan-ignore staticMethod.notFound
         $response = Http::cloudflare()->get("zones/{$this->domain->cloudflare_id}/dns_records/$this->cloudflare_id", ['search' => $this->name])->json();
 
         if ($response['success']) {
