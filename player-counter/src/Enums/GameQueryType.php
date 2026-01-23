@@ -11,6 +11,7 @@ enum GameQueryType: string implements HasLabel
     case MinecraftJava = 'minecraft';
     case MinecraftBedrock = 'minecraftbe';
 
+    case Cs16 = 'cs16';
     case Rust = 'rust';
     case Arma3 = 'arma3';
     case ArkSe = 'arkse';
@@ -41,6 +42,10 @@ enum GameQueryType: string implements HasLabel
 
         if ($this === self::FiveMRedM) {
             return 'FiveM / RedM';
+        }
+
+        if ($this === self::Cs16) {
+            return 'Counter-Strike 1.6';
         }
 
         return str($this->name)->headline();
