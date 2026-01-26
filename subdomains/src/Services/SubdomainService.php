@@ -14,13 +14,23 @@ class SubdomainService
      */
     public function handle(array $data, ?Subdomain $subdomain = null): Subdomain
     {
-        $subdomain ??= Subdomain::create($data);
-        $subdomain->update($data);
+        $newSubdomain = true;
+
+        if (is_null($subdomain)) {
+            $subdomain = Subdomain::create($data);
+        } else {
+            $subdomain->update($data);
+            $newSubdomain = false;
+        }
+
+        $subdomain->refresh();
 
         try {
             $subdomain->upsertOnCloudflare();
         } catch (Exception $exception) {
-            $subdomain->delete();
+            if ($newSubdomain) {
+                $subdomain->delete();
+            }
 
             throw $exception;
         }
