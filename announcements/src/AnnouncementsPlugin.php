@@ -32,6 +32,7 @@ class AnnouncementsPlugin implements Plugin
                 ->title($announcement->title)
                 ->body($announcement->body)
                 ->status($announcement->type)
+                ->icon($announcement->icon)
                 ->send();
         }
     }

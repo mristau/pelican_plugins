@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string|null $body
  * @property string $type
+ * @property string|null $icon
  * @property string[]|null $panels
  * @property Carbon|null $valid_from
  * @property Carbon|null $valid_to
@@ -23,6 +24,7 @@ class Announcement extends Model
         'title',
         'body',
         'type',
+        'icon',
         'panels',
         'valid_from',
         'valid_to',

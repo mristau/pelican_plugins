@@ -2,6 +2,7 @@
 
 namespace Boy132\Announcements\Filament\Admin\Resources\Announcements;
 
+use App\Enums\TablerIcon;
 use App\Filament\Components\Tables\Columns\DateTimeColumn;
 use App\Livewire\AlertBanner;
 use Boy132\Announcements\Filament\Admin\Resources\Announcements\Pages\ManageAnnouncements;
@@ -13,11 +14,13 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -60,6 +63,11 @@ class AnnouncementResource extends Resource
                     ->label(trans('announcements::strings.type'))
                     ->color(fn ($state) => $state)
                     ->badge(),
+                IconColumn::make('icon')
+                    ->label(trans('announcements::strings.icon'))
+                    ->placeholder(trans('announcements::strings.default_icon'))
+                    ->icon(fn ($state) => $state)
+                    ->color(fn (Announcement $announcement) => $announcement->type),
                 TextColumn::make('panels')
                     ->label(trans('announcements::strings.panels'))
                     ->placeholder(trans('announcements::strings.all_panels'))
@@ -100,7 +108,7 @@ class AnnouncementResource extends Resource
                             'title' => $get('title') ?? trans_choice('announcements::strings.announcement', 1),
                             'body' => $get('body'),
                             'status' => $get('type') ?? 'info',
-                            'icon' => null,
+                            'icon' => $get('icon'),
                             'closeable' => false,
                         ]),
                     ]),
@@ -119,6 +127,8 @@ class AnnouncementResource extends Resource
                     ->label(trans('announcements::strings.type'))
                     ->selectablePlaceholder(false)
                     ->default('info')
+                    ->prefixIcon(TablerIcon::CircleFilled)
+                    ->prefixIconColor(fn ($state) => $state)
                     ->options([
                         'info' => 'Info',
                         'success' => 'Success',
@@ -126,8 +136,18 @@ class AnnouncementResource extends Resource
                         'danger' => 'Danger',
                     ])
                     ->debounce(),
+                Select::make('icon')
+                    ->label(trans('announcements::strings.icon'))
+                    ->placeholder(trans('announcements::strings.default_icon'))
+                    ->nullable()
+                    ->searchable()
+                    ->options(TablerIcon::class)
+                    ->prefixIcon(fn ($state) => $state)
+                    ->debounce(),
                 Select::make('panels')
                     ->label(trans('announcements::strings.panels'))
+                    ->placeholder(trans('announcements::strings.all_panels'))
+                    ->columnSpanFull()
                     ->multiple()
                     ->options([
                         'admin' => 'Admin Area',
@@ -164,6 +184,10 @@ class AnnouncementResource extends Resource
                     ->label(trans('announcements::strings.type'))
                     ->color(fn ($state) => $state)
                     ->badge(),
+                IconEntry::make('icon')
+                    ->label(trans('announcements::strings.icon'))
+                    ->placeholder(trans('announcements::strings.default_icon'))
+                    ->color(fn (Announcement $announcement) => $announcement->type),
                 TextEntry::make('panels')
                     ->label(trans('announcements::strings.panels'))
                     ->placeholder(trans('announcements::strings.all_panels'))

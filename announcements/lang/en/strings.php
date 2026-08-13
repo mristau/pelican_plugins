@@ -7,6 +7,8 @@ return [
     'body' => 'Body',
     'no_body' => 'No Body',
     'type' => 'Type',
+    'icon' => 'Icon',
+    'default_icon' => 'Default icon based on type',
     'panels' => 'Panels',
     'all_panels' => 'All Panels',
     'valid_from' => 'Valid from',

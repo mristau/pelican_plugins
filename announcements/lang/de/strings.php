@@ -7,6 +7,8 @@ return [
     'body' => 'Nachricht',
     'no_body' => 'Keine Nachricht',
     'type' => 'Typ',
+    'icon' => 'Icon',
+    'default_icon' => 'Standard Icon basierend auf Typ',
     'panels' => 'Panels',
     'all_panels' => 'Alle Panels',
     'valid_from' => 'Gültig von',
