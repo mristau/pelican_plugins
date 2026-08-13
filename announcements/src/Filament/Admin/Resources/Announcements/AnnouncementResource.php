@@ -3,6 +3,7 @@
 namespace Boy132\Announcements\Filament\Admin\Resources\Announcements;
 
 use App\Filament\Components\Tables\Columns\DateTimeColumn;
+use App\Livewire\AlertBanner;
 use Boy132\Announcements\Filament\Admin\Resources\Announcements\Pages\ManageAnnouncements;
 use Boy132\Announcements\Models\Announcement;
 use Filament\Actions\CreateAction;
@@ -14,6 +15,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -87,15 +90,31 @@ class AnnouncementResource extends Resource
     {
         return $schema
             ->components([
+                Fieldset::make(trans('announcements::strings.preview'))
+                    ->columns(1)
+                    ->columnSpanFull()
+                    ->contained(false)
+                    ->schema(fn (Get $get) => [
+                        AlertBanner::fromArray([
+                            'id' => 'announcement_preview',
+                            'title' => $get('title') ?? trans_choice('announcements::strings.announcement', 1),
+                            'body' => $get('body'),
+                            'status' => $get('type') ?? 'info',
+                            'icon' => null,
+                            'closeable' => false,
+                        ]),
+                    ]),
                 TextInput::make('title')
                     ->label(trans('announcements::strings.title'))
                     ->required()
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->debounce(),
                 TextInput::make('body')
                     ->label(trans('announcements::strings.body'))
                     ->placeholder(trans('announcements::strings.no_body'))
                     ->nullable()
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->debounce(),
                 Select::make('type')
                     ->label(trans('announcements::strings.type'))
                     ->selectablePlaceholder(false)
@@ -105,7 +124,8 @@ class AnnouncementResource extends Resource
                         'success' => 'Success',
                         'warning' => 'Warning',
                         'danger' => 'Danger',
-                    ]),
+                    ])
+                    ->debounce(),
                 Select::make('panels')
                     ->label(trans('announcements::strings.panels'))
                     ->multiple()

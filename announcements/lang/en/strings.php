@@ -13,4 +13,5 @@ return [
     'no_valid_from' => 'No valid from',
     'valid_to' => 'Valid to',
     'no_valid_to' => 'No valid to',
+    'preview' => 'Preview',
 ];

@@ -13,4 +13,5 @@ return [
     'no_valid_from' => 'Kein gültig von',
     'valid_to' => 'Gültig bis',
     'no_valid_to' => 'Kein gültig bis',
+    'preview' => 'Vorschau',
 ];
