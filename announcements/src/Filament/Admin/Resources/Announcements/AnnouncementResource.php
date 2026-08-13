@@ -2,6 +2,7 @@
 
 namespace Boy132\Announcements\Filament\Admin\Resources\Announcements;
 
+use App\Filament\Components\Tables\Columns\DateTimeColumn;
 use Boy132\Announcements\Filament\Admin\Resources\Announcements\Pages\ManageAnnouncements;
 use Boy132\Announcements\Models\Announcement;
 use Filament\Actions\CreateAction;
@@ -60,14 +61,12 @@ class AnnouncementResource extends Resource
                     ->label(trans('announcements::strings.panels'))
                     ->placeholder(trans('announcements::strings.all_panels'))
                     ->badge(),
-                TextColumn::make('valid_from')
+                DateTimeColumn::make('valid_from')
                     ->label(trans('announcements::strings.valid_from'))
-                    ->placeholder(trans('announcements::strings.no_valid_from'))
-                    ->dateTime(),
-                TextColumn::make('valid_to')
+                    ->placeholder(trans('announcements::strings.no_valid_from')),
+                DateTimeColumn::make('valid_to')
                     ->label(trans('announcements::strings.valid_to'))
-                    ->placeholder(trans('announcements::strings.no_valid_to'))
-                    ->dateTime(),
+                    ->placeholder(trans('announcements::strings.no_valid_to')),
             ])
             ->recordActions([
                 ViewAction::make()
@@ -118,11 +117,15 @@ class AnnouncementResource extends Resource
                 DateTimePicker::make('valid_from')
                     ->label(trans('announcements::strings.valid_from'))
                     ->placeholder(trans('announcements::strings.no_valid_from'))
-                    ->nullable(),
+                    ->nullable()
+                    ->native(false)
+                    ->timezone(user()->timezone),
                 DateTimePicker::make('valid_to')
                     ->label(trans('announcements::strings.valid_to'))
                     ->placeholder(trans('announcements::strings.no_valid_to'))
-                    ->nullable(),
+                    ->nullable()
+                    ->native(false)
+                    ->timezone(user()->timezone),
             ]);
     }
 
