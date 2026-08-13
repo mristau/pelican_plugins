@@ -3,6 +3,7 @@
 namespace Boy132\Announcements\Models;
 
 use Carbon\Carbon;
+use Filament\Actions\Action;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $body
  * @property string $type
  * @property string|null $icon
+ * @property string|null $url_label
+ * @property string|null $url_link
  * @property string[]|null $panels
  * @property Carbon|null $valid_from
  * @property Carbon|null $valid_to
@@ -25,6 +28,8 @@ class Announcement extends Model
         'body',
         'type',
         'icon',
+        'url_label',
+        'url_link',
         'panels',
         'valid_from',
         'valid_to',
@@ -56,5 +61,16 @@ class Announcement extends Model
         }
 
         return true;
+    }
+
+    public static function getUrlAction(?string $urlLabel, ?string $urlLink): ?Action
+    {
+        if ($urlLabel && $urlLink) {
+            return Action::make('exclude_link')
+                ->label($urlLabel)
+                ->url($urlLink, true);
+        }
+
+        return null;
     }
 }

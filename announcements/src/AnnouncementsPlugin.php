@@ -28,12 +28,18 @@ class AnnouncementsPlugin implements Plugin
                 continue;
             }
 
-            AlertBanner::make('announcement_' . $announcement->id)
+            $alertBanner = AlertBanner::make('announcement_' . $announcement->id)
                 ->title($announcement->title)
                 ->body($announcement->body)
                 ->status($announcement->type)
-                ->icon($announcement->icon)
-                ->send();
+                ->icon($announcement->icon);
+
+            if (method_exists($alertBanner, 'actions')) {
+                $action = $announcement->getUrlAction($announcement->url_label, $announcement->url_link);
+                $alertBanner->actions($action ? [$action] : []);
+            }
+
+            $alertBanner->send();
         }
     }
 }

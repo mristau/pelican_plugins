@@ -7,6 +7,7 @@ use App\Filament\Components\Tables\Columns\DateTimeColumn;
 use App\Livewire\AlertBanner;
 use Boy132\Announcements\Filament\Admin\Resources\Announcements\Pages\ManageAnnouncements;
 use Boy132\Announcements\Models\Announcement;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -20,6 +21,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Size;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -68,6 +70,10 @@ class AnnouncementResource extends Resource
                     ->placeholder(trans('announcements::strings.default_icon'))
                     ->icon(fn ($state) => $state)
                     ->color(fn (Announcement $announcement) => $announcement->type),
+                TextColumn::make('url_label')
+                    ->label(trans('announcements::strings.url'))
+                    ->placeholder(trans('announcements::strings.no_url'))
+                    ->url(fn (Announcement $announcement) => $announcement->url_link, true),
                 TextColumn::make('panels')
                     ->label(trans('announcements::strings.panels'))
                     ->placeholder(trans('announcements::strings.all_panels'))
@@ -102,16 +108,32 @@ class AnnouncementResource extends Resource
                     ->columns(1)
                     ->columnSpanFull()
                     ->contained(false)
-                    ->schema(fn (Get $get) => [
-                        AlertBanner::fromArray([
-                            'id' => 'announcement_preview',
-                            'title' => $get('title') ?? trans_choice('announcements::strings.announcement', 1),
-                            'body' => $get('body'),
-                            'status' => $get('type') ?? 'info',
-                            'icon' => $get('icon'),
-                            'closeable' => false,
-                        ]),
-                    ]),
+                    ->schema(function (Get $get) {
+                        $actions = [];
+
+                        $urlLabel = $get('url_label');
+                        $urlLink = $get('url_link');
+                        if ($urlLabel && $urlLink) {
+                            $actions = [
+                                Announcement::getUrlAction($urlLabel, $urlLink)
+                                    ->defaultView(Action::LINK_VIEW)
+                                    ->defaultSize(Size::Small)
+                                    ->toArray(),
+                            ];
+                        }
+
+                        return [
+                            AlertBanner::fromArray([
+                                'id' => 'announcement_preview',
+                                'title' => $get('title') ?? trans_choice('announcements::strings.announcement', 1),
+                                'body' => $get('body'),
+                                'status' => $get('type') ?? 'info',
+                                'icon' => $get('icon'),
+                                'closeable' => false,
+                                'actions' => $actions,
+                            ]),
+                        ];
+                    }),
                 TextInput::make('title')
                     ->label(trans('announcements::strings.title'))
                     ->required()
@@ -143,6 +165,17 @@ class AnnouncementResource extends Resource
                     ->searchable()
                     ->options(TablerIcon::class)
                     ->prefixIcon(fn ($state) => $state)
+                    ->debounce(),
+                TextInput::make('url_label')
+                    ->label(trans('announcements::strings.url_label'))
+                    ->placeholder(trans('announcements::strings.no_url'))
+                    ->requiredWith('url_link')
+                    ->debounce(),
+                TextInput::make('url_link')
+                    ->label(trans('announcements::strings.url_link'))
+                    ->placeholder(trans('announcements::strings.no_url'))
+                    ->requiredWith('url_label')
+                    ->url()
                     ->debounce(),
                 Select::make('panels')
                     ->label(trans('announcements::strings.panels'))
