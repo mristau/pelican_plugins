@@ -5,8 +5,11 @@ namespace Boy132\Announcements\Filament\Admin\Resources\Announcements;
 use App\Enums\TablerIcon;
 use App\Filament\Components\Tables\Columns\DateTimeColumn;
 use App\Livewire\AlertBanner;
+use App\Models\User;
 use Boy132\Announcements\Filament\Admin\Resources\Announcements\Pages\ManageAnnouncements;
 use Boy132\Announcements\Models\Announcement;
+use Boy132\Announcements\Notifications\AnnouncementCreated;
+use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -15,8 +18,10 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification as FilamentNotification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Utilities\Get;
@@ -25,6 +30,8 @@ use Filament\Support\Enums\Size;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Notification;
 
 class AnnouncementResource extends Resource
 {
@@ -89,11 +96,52 @@ class AnnouncementResource extends Resource
                 ViewAction::make()
                     ->hidden(fn ($record) => static::getEditAuthorizationResponse($record)->allowed()),
                 EditAction::make(),
+                Action::make('send_mail')
+                    ->tooltip(trans('announcements::strings.send_as_email.label'))
+                    ->icon(TablerIcon::Send)
+                    ->authorize(fn () => user()?->can('sendMails announcement'))
+                    ->schema([
+                        Select::make('email_users')
+                            ->label(trans('announcements::strings.email_users'))
+                            ->placeholder(trans('announcements::strings.all_users'))
+                            ->searchable()
+                            ->multiple()
+                            ->options(User::pluck('username', 'id')),
+                    ])
+                    ->action(function (array $data, Announcement $announcement) {
+                        try {
+                            $users = User::when($data['email_users'] && count($data['email_users']) > 0, fn (Builder $query) => $query->whereIn('id', $data['email_users']))->get();
+                            Notification::send($users, new AnnouncementCreated($announcement));
+
+                            $userCount = count($users);
+
+                            FilamentNotification::make()
+                                ->title(trans('announcements::strings.send_as_email.success'))
+                                ->body(trans_choice('announcements::strings.send_as_email.recipients', $userCount, ['count' => $userCount]))
+                                ->success()
+                                ->send();
+                        } catch (Exception $exception) {
+                            report($exception);
+
+                            FilamentNotification::make()
+                                ->title(trans('announcements::strings.send_as_email.failed'))
+                                ->body($exception->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+
+                    }),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
                 CreateAction::make()
-                    ->createAnother(false),
+                    ->createAnother(false)
+                    ->after(function (array $data, Announcement $announcement) {
+                        if ($data['send_as_email']) {
+                            $users = User::when($data['email_users'] && count($data['email_users']) > 0, fn (Builder $query) => $query->whereIn('id', $data['email_users']))->get();
+                            Notification::send($users, new AnnouncementCreated($announcement));
+                        }
+                    }),
             ])
             ->emptyStateIcon('tabler-speakerphone')
             ->emptyStateDescription('')
@@ -199,6 +247,20 @@ class AnnouncementResource extends Resource
                     ->nullable()
                     ->native(false)
                     ->timezone(user()->timezone),
+                Toggle::make('send_as_email')
+                    ->label(trans('announcements::strings.send_as_email.label').'?')
+                    ->hidden(fn () => !user()?->can('sendMails announcement'))
+                    ->visibleOn('create')
+                    ->inline(false)
+                    ->debounce(),
+                Select::make('email_users')
+                    ->label(trans('announcements::strings.email_users'))
+                    ->placeholder(trans('announcements::strings.all_users'))
+                    ->visibleOn('create')
+                    ->hidden(fn (Get $get) => !$get('send_as_email'))
+                    ->searchable()
+                    ->multiple()
+                    ->options(User::pluck('username', 'id')),
             ]);
     }
 

@@ -20,4 +20,12 @@ return [
     'valid_to' => 'Gültig bis',
     'no_valid_to' => 'Kein gültig bis',
     'preview' => 'Vorschau',
+    'send_as_email' => [
+        'label' => 'Als E-Mail versenden',
+        'success' => 'Ankündigung als E-Mail versendet',
+        'failed' => 'Konnte E-Mail nicht versenden',
+        'recipients' => ':count Empfänger|:count Empfänger',
+    ],
+    'email_users' => 'E-Mail Empfänger',
+    'all_users' => 'Alle Benutzer',
 ];

@@ -20,4 +20,12 @@ return [
     'valid_to' => 'Valid to',
     'no_valid_to' => 'No valid to',
     'preview' => 'Preview',
+    'send_as_email' => [
+        'label' => 'Send as email',
+        'success' => 'Announcement sent as email',
+        'failed' => 'Could not send email',
+        'recipients' => ':count recipient|:count recipients',
+    ],
+    'email_users' => 'Email recipients',
+    'all_users' => 'All users',
 ];
