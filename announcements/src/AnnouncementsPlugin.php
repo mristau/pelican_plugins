@@ -34,6 +34,7 @@ class AnnouncementsPlugin implements Plugin
                 ->status($announcement->type)
                 ->icon($announcement->icon);
 
+            // @phpstan-ignore function.alreadyNarrowedType
             if (method_exists($alertBanner, 'actions')) {
                 $action = $announcement->getUrlAction($announcement->url_label, $announcement->url_link);
                 $alertBanner->actions($action ? [$action] : []);
